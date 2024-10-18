@@ -1,0 +1,22 @@
+[versions]
+junit-jupiter = "5.10.0"
+jackson = "2.18.1"
+lontten-common = "0.0.7.RELEASE"
+
+[libraries]
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
+jackson-jdk8 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jdk8", version.ref = "jackson" }
+jackson-xml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-xml", version.ref = "jackson" }
+
+lontten-common = { module = "io.github.lontten:lontten-common", version.ref = "lontten-common" }
+
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+
+[bundles]
+jackson = [
+    "jackson-databind",
+    "jackson-jsr310",
+    "jackson-jdk8",
+    "jackson-xml",
+]
