@@ -24,6 +24,7 @@
  * ------------------------------------------------------------*/
 package com.lontten.util.json;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -89,11 +90,26 @@ public class LnNode {
         }
     }
 
+    /**
+     *   HashMap<String, HashMap<String, String>> result
+     *      = node.get(key, new TypeReference<HashMap<String, HashMap<String, String>>>() {});
+     *
+     *
+     * @param str
+     * @param toValueTypeRef
+     * @return
+     * @param <T>
+     */
+    public <T> T get(String str, TypeReference<T> toValueTypeRef) {
+        JsonNode node = asObject().get(str);
+        return LnJsonUtil.node2bean(node, toValueTypeRef);
+    }
+
     public LnNode getNode(String str) {
         return new LnNode(asObject().get(str));
     }
 
-    public String getStr(String str) {
+    public String getString(String str) {
         return asObject().get(str).asText();
     }
 
@@ -146,13 +162,20 @@ public class LnNode {
 
     // ------------------ api set ---------------
     @Nonnull
-    public LnNode push(@Nullable String key, @Nullable Object value) {
+    public LnNode put(@Nullable String key, @Nullable Object value) {
         if (key == null) return this;
         if (value == null) {
             asObject().putNull(key);
             return this;
         }
         asObject().set(key, LnJsonUtil.bean2jsonNode(value));
+        return this;
+    }
+
+    @Nonnull
+    public LnNode remove(@Nullable String key) {
+        if (key == null) return this;
+        asObject().remove(key);
         return this;
     }
 

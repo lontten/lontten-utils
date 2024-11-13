@@ -39,8 +39,8 @@ class LnJsonUtilTest {
         demoUsers.add(demoUser2);
 
         LnNode node = LnJsonUtil.createNode();
-        node.push("user", demoUser);
-        node.push("list", demoUsers);
+        node.put("user", demoUser);
+        node.put("list", demoUsers);
 
         LnNode lnNode1 = node.deepCopy();
         LnNode lnNode2 = node.deepCopy();
@@ -49,7 +49,7 @@ class LnJsonUtilTest {
         lnNodes.add(lnNode1);
         lnNodes.add(lnNode2);
 
-        node.push("list2", lnNodes);
+        node.put("list2", lnNodes);
 
 
 //        --
@@ -73,13 +73,13 @@ class LnJsonUtilTest {
         String json = "{\"name\":\"lontten\"}";
 
         LnNode node = LnJsonUtil.createNode();
-        node.push("name", "lontten");
+        node.put("name", "lontten");
 
         String s = LnJsonUtil.bean2jsonStr(node);
         Assertions.assertEquals(json, s);
 
         LnNode node1 = LnJsonUtil.jsonStr2node(json);
-        Assertions.assertEquals(node.getStr("name"), node1.getStr("name"));
+        Assertions.assertEquals(node.getString("name"), node1.getString("name"));
     }
 
     /**
@@ -91,12 +91,12 @@ class LnJsonUtilTest {
                 ["com.lontten.util.json.LnNode",{"value":{"name":"lontten"}}]""";
 
         LnNode node = LnJsonUtil.createNode();
-        node.push("name", "lontten");
+        node.put("name", "lontten");
 
         String s = AutoTypeObjectMapperUtil.bean2jsonStr(node);
         Assertions.assertEquals(json, s);
 
         LnNode node1 = (LnNode) AutoTypeObjectMapperUtil.jsonStr2bean(json);
-        Assertions.assertEquals(node.getStr("name"), node1.getStr("name"));
+        Assertions.assertEquals(node.getString("name"), node1.getString("name"));
     }
 }

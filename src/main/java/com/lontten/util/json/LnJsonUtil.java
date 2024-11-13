@@ -28,6 +28,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -134,6 +135,14 @@ public class LnJsonUtil {
     public static <T> T node2bean(JsonNode jsonNode, Class<T> clazz) {
         try {
             return objectMapper.treeToValue(jsonNode, clazz);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T node2bean(JsonNode jsonNode, TypeReference<T> toValueTypeRef) {
+        try {
+            return objectMapper.treeToValue(jsonNode, toValueTypeRef);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
