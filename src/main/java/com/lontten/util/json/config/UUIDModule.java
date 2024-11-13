@@ -22,17 +22,16 @@
  *
  * lontten-utils: Lontten 工具库
  * ------------------------------------------------------------*/
-package com.lontten.util.json;
+package com.lontten.util.json.config;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import java.io.IOException;
+import java.util.UUID;
 
-public class LnNodeSer extends JsonSerializer<LnNode> {
-    @Override
-    public void serialize(LnNode lnNode, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-        lnNode.value.serialize(jsonGenerator, serializerProvider);
+public class UUIDModule extends SimpleModule {
+
+    public UUIDModule() {
+        this.addSerializer(UUID.class, new UUIDJson.MySerializer());
+        this.addDeserializer(UUID.class, new UUIDJson.MyDeserializer());
     }
 }

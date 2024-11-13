@@ -22,19 +22,16 @@
  *
  * lontten-utils: Lontten 工具库
  * ------------------------------------------------------------*/
-package com.lontten.util.json;
+package com.lontten.util.json.config;
 
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.lontten.util.json.LnNode;
+import com.lontten.util.json.LnNodeJson;
 
-import java.io.IOException;
+public class LnNodeModule extends SimpleModule {
 
-public class LnNodeDeSer extends JsonDeserializer<LnNode> {
-
-    @Override
-    public LnNode deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JacksonException {
-        return new LnNode(jsonParser.readValueAsTree());
+    public LnNodeModule() {
+        this.addSerializer(LnNode.class, new LnNodeJson.MySerializer());
+        this.addDeserializer(LnNode.class, new LnNodeJson.MyDeserializer());
     }
 }

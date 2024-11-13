@@ -34,9 +34,16 @@ import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
 import com.lontten.util.json.config.LongModule;
 import com.lontten.util.json.config.TimeModule;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 
-public class RedisObjectMapperUtil {
+/**
+ * 类型自推导的ObjectMapper
+ * 依靠json字符串内部的类型信息，直接转成Object,然后直接强制转换为目标类型
+ * 在反序列化时，无法指定目标类型，只能强转，所以需要在转成Object时，要有类型信息。
+ * 应用场景：AOP cache 缓存，只能将缓存的json数据转成Object，再强转成目标类型
+ */
+public class AutoTypeObjectMapperUtil {
     public static final ObjectMapper objectMapper;
 
     static {
@@ -55,6 +62,8 @@ public class RedisObjectMapperUtil {
         // long 转 string
         objectMapper.registerModule(new LongModule());
 
+        // 类型自推导json，直接用默认 实现，屏蔽 @JsonSerialize 和 @JsonDeserialize 的自定义实现
+
         //保留java类型信息
         objectMapper.activateDefaultTyping(LaissezFaireSubTypeValidator.instance, ObjectMapper.DefaultTyping.NON_FINAL);
     }
@@ -67,10 +76,30 @@ public class RedisObjectMapperUtil {
         }
     }
 
-    public static <T> T bytes2bean(byte[] bs, Class<T> clazz) {
+    @Nullable
+    public static String bean2jsonStr(@Nullable Object o) {
+        if (o == null) {
+            return null;
+        }
         try {
-            return objectMapper.readValue(bs, clazz);
+            return objectMapper.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object bytes2bean(byte[] bs) {
+        try {
+            return objectMapper.readValue(bs, Object.class);
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Object jsonStr2bean(String str) {
+        try {
+            return objectMapper.readValue(str, Object.class);
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }

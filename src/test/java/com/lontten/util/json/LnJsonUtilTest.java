@@ -1,5 +1,7 @@
 package com.lontten.util.json;
 
+import com.lontten.util.json.redis.AutoTypeObjectMapperUtil;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -61,5 +63,40 @@ class LnJsonUtilTest {
 
         String json = LnJsonUtil.bean2jsonStr(node);
         System.out.println(json);
+    }
+
+    /**
+     * 纯json，没有类型信息
+     */
+    @Test
+    void jsonNoType() {
+        String json = "{\"name\":\"lontten\"}";
+
+        LnNode node = LnJsonUtil.createNode();
+        node.push("name", "lontten");
+
+        String s = LnJsonUtil.bean2jsonStr(node);
+        Assertions.assertEquals(json, s);
+
+        LnNode node1 = LnJsonUtil.jsonStr2node(json);
+        Assertions.assertEquals(node.getStr("name"), node1.getStr("name"));
+    }
+
+    /**
+     * json，有类型信息
+     */
+    @Test
+    void jsonType() {
+        String json = """
+                ["com.lontten.util.json.LnNode",{"value":{"name":"lontten"}}]""";
+
+        LnNode node = LnJsonUtil.createNode();
+        node.push("name", "lontten");
+
+        String s = AutoTypeObjectMapperUtil.bean2jsonStr(node);
+        Assertions.assertEquals(json, s);
+
+        LnNode node1 = (LnNode) AutoTypeObjectMapperUtil.jsonStr2bean(json);
+        Assertions.assertEquals(node.getStr("name"), node1.getStr("name"));
     }
 }

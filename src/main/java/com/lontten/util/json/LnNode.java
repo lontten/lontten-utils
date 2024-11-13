@@ -25,8 +25,6 @@
 package com.lontten.util.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -40,8 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@JsonSerialize(using = LnNodeSer.class)
-@JsonDeserialize(using = LnNodeDeSer.class)
 public class LnNode {
 
     JsonNode value;
@@ -72,7 +68,7 @@ public class LnNode {
     public <T> List<T> getList(String str, Class<T> clazz) {
         ArrayNode nodes = (ArrayNode) asObject().get(str);
         ArrayList<T> list = new ArrayList<>();
-        nodes.forEach(node -> list.add(LnJsonUtil.jsonNode2bean(node, clazz)));
+        nodes.forEach(node -> list.add(LnJsonUtil.node2bean(node, clazz)));
         return list;
     }
 
@@ -89,7 +85,7 @@ public class LnNode {
         if (clazz.isAssignableFrom(JsonNode.class)) {
             return (T) node;
         } else {
-            return LnJsonUtil.jsonNode2bean(node, clazz);
+            return LnJsonUtil.node2bean(node, clazz);
         }
     }
 
