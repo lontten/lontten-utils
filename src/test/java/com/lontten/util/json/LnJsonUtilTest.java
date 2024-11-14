@@ -14,7 +14,7 @@ import java.util.UUID;
 class LnJsonUtilTest {
 
     @Test
-    void bean2jsonStr() {
+    void bean2json() {
         DemoUser demoUser = new DemoUser();
         demoUser.setId(1L);
         demoUser.setAge(18);
@@ -61,7 +61,7 @@ class LnJsonUtilTest {
         list2.forEach(System.out::println);
 
 
-        String json = LnJsonUtil.bean2jsonStr(node);
+        String json = LnJsonUtil.bean2json(node);
         System.out.println(json);
     }
 
@@ -75,10 +75,10 @@ class LnJsonUtilTest {
         LnNode node = LnJsonUtil.createNode();
         node.put("name", "lontten");
 
-        String s = LnJsonUtil.bean2jsonStr(node);
+        String s = LnJsonUtil.bean2json(node);
         Assertions.assertEquals(json, s);
 
-        LnNode node1 = LnJsonUtil.jsonStr2node(json);
+        LnNode node1 = LnJsonUtil.json2node(json);
         Assertions.assertEquals(node.getString("name"), node1.getString("name"));
     }
 

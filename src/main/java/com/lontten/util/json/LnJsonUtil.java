@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.google.common.base.Preconditions;
 import com.lontten.util.config.LonttenJsonConfig;
 import com.lontten.util.json.config.LnNodeModule;
@@ -48,14 +49,32 @@ import java.util.HashMap;
 
 public class LnJsonUtil {
     private static final ObjectMapper objectMapper;
+    private static final ObjectMapper xmlMapper;
+
+    public static ObjectMapper xmlOM() {
+        return xmlMapper;
+    }
+
+    public static ObjectMapper xmlOMNew() {
+        return xmlMapper.copy();
+    }
 
     public static ObjectMapper jsonOM() {
         return objectMapper;
     }
 
+    public static ObjectMapper jsonOMNew() {
+        return objectMapper.copy();
+    }
+
     public static ObjectMapper jsOM() {
         objectMapper.registerModule(new LongModule());
         return objectMapper;
+    }
+
+    public static ObjectMapper jsOMNew() {
+        objectMapper.registerModule(new LongModule());
+        return objectMapper.copy();
     }
 
     static {
@@ -82,13 +101,17 @@ public class LnJsonUtil {
 
         // 纯json，使用LnNode 内部的 JsonNode自身序列化，反序列化。
         objectMapper.registerModule(new LnNodeModule());
+
+
+        // -------------------- xml ---------------------------
+        xmlMapper = new XmlMapper();
     }
 
 
     //    -------------bean---------------------
 
     @Nullable
-    public static String bean2jsonStr(@Nullable Object o) {
+    public static String bean2json(@Nullable Object o) {
         if (o == null) {
             return null;
         }
@@ -109,9 +132,27 @@ public class LnJsonUtil {
         }
     }
 
+    public static String bean2xml(Object o) {
+        try {
+            return xmlMapper.writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String bean2xml(Object o, String rootName) {
+        try {
+            return xmlMapper.writer()
+                    .withRootName(rootName)
+                    .writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     //    -------------jsonStr---------------------
-    public static JsonNode jsonStr2jsonNode(String str) {
+    public static JsonNode json2jsonNode(String str) {
         try {
             return objectMapper.readTree(str);
         } catch (JsonProcessingException e) {
@@ -119,8 +160,25 @@ public class LnJsonUtil {
         }
     }
 
-    public static LnNode jsonStr2node(String str) {
-        return new LnNode(jsonStr2jsonNode(str));
+    //    -------------xml---------------------
+    public static JsonNode xml2jsonNode(String str) {
+        try {
+            return xmlMapper.readTree(str);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T xml2bean(String str, Class<T> clazz) {
+        try {
+            return xmlMapper.readValue(str, clazz);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static LnNode json2node(String str) {
+        return new LnNode(json2jsonNode(str));
     }
 
     public static <T> T jsonStr2bean(String str, Class<T> clazz) {
