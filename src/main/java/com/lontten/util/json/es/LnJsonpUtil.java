@@ -11,9 +11,9 @@ import com.lontten.util.json.config.TimeModule;
 import com.lontten.util.json.config.UUIDModule;
 
 
-public class LonttenSecurityJsonpMapper {
+public class LnJsonpUtil {
 
-    public static JacksonJsonpMapper jsonpMapper() {
+    public static JacksonJsonpMapper jsonpOM() {
         ObjectMapper objectMapper = new ObjectMapper();
         //默认不序列化空值
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
