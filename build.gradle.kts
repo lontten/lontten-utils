@@ -72,6 +72,17 @@ repositories {
 dependencies {
     api(libs.lontten.common)
 
+    // springboot
+    implementation("org.springframework.boot:spring-boot-starter-web:2.7.18")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:2.7.18")
+    implementation("org.springframework.security:spring-security-crypto:6.3.0")
+
+    // es8
+    implementation("co.elastic.clients:elasticsearch-java:8.15.3")
+    // mybatis-plus
+    implementation("com.baomidou:mybatis-plus:3.5.7")
+    implementation("cn.hutool:hutool-all:5.8.25")
+
     implementation(libs.bundles.jackson)
 
     // test
