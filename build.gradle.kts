@@ -6,7 +6,7 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.29.0"
 }
 group = "io.github.lontten"
-version = "0.0.5.RELEASE"
+version = "0.0.6.RELEASE"
 
 java {
     toolchain {
