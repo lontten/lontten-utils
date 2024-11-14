@@ -91,14 +91,16 @@ public class LnNode {
     }
 
     /**
+     * 使用示例：
+     * <pre>
      *   HashMap<String, HashMap<String, String>> result
      *      = node.get(key, new TypeReference<HashMap<String, HashMap<String, String>>>() {});
-     *
+     * </pre>
      *
      * @param str
      * @param toValueTypeRef
-     * @return
      * @param <T>
+     * @return
      */
     public <T> T get(String str, TypeReference<T> toValueTypeRef) {
         JsonNode node = asObject().get(str);
